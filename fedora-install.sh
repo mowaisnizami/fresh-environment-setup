@@ -215,11 +215,24 @@ echo "✅ VS Code installed!"
 # -----------------------------
 echo "🐘 Installing pgAdmin..."
 
-sudo rpm -i https://ftp.postgresql.org/pub/pgadmin/pgadmin4/yum/pgadmin4-fedora-repo-2-1.noarch.rpm
-# Install for desktop mode only.
-sudo yum install -y pgadmin4-desktop
+# Check if pgadmin4-fedora-repo is already installed
+if ! rpm -q pgadmin4-fedora-repo &>/dev/null; then
+  echo "📥 Adding pgAdmin repository..."
+  if sudo rpm -i https://ftp.postgresql.org/pub/pgadmin/pgadmin4/yum/pgadmin4-fedora-repo-2-1.noarch.rpm; then
+    echo "✅ pgAdmin repository added!"
+  else
+    echo "⚠️  Failed to add pgAdmin repository"
+  fi
+else
+  echo "✅ pgAdmin repository already installed"
+fi
 
-echo "✅ pgAdmin installed!"
+# Install pgAdmin desktop
+if sudo dnf install -y pgadmin4-desktop 2>/dev/null; then
+  echo "✅ pgAdmin installed!"
+else
+  echo "⚠️  pgAdmin installation skipped (may not be available)"
+fi
 
 
 # -----------------------------
