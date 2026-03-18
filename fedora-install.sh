@@ -239,13 +239,29 @@ fi
 # Install DBeaver
 # -----------------------------
 echo "🐘 Installing DBeaver..."
-sudo dnf install java-11-openjdk-devel
-wget https://dbeaver.io/files/dbeaver-ce-latest-linux-x86_64.rpm
 
-sudo dnf install -y dbeaver-ce-latest-linux-x86_64.rpm
-rm dbeaver-ce-latest-linux-x86_64.rpm
-
-echo "✅ DBeaver installed!"
+# Check if DBeaver is already installed
+if ! command -v dbeaver &>/dev/null && ! rpm -q dbeaver-ce &>/dev/null; then
+  echo "📥 Installing Java runtime..."
+  sudo dnf install -y java-11-openjdk-devel || true
+  
+  DBEAVER_FILE="dbeaver-ce-latest-linux-x86_64.rpm"
+  echo "📥 Downloading DBeaver..."
+  if wget -q --timeout=30 https://dbeaver.io/files/$DBEAVER_FILE; then
+    echo "💾 Installing DBeaver package..."
+    if sudo dnf install -y "$DBEAVER_FILE"; then
+      echo "✅ DBeaver installed!"
+      rm "$DBEAVER_FILE"
+    else
+      echo "⚠️  DBeaver installation failed"
+      rm -f "$DBEAVER_FILE"
+    fi
+  else
+    echo "⚠️  DBeaver download failed (may be unavailable or network issue)"
+  fi
+else
+  echo "✅ DBeaver is already installed"
+fi
 
 # -----------------------------
 # Done
