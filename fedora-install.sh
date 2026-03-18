@@ -88,10 +88,19 @@ oh-my-posh font install meslo || true
 # Download Oh My Posh themes from GitHub repository
 # -----------------------------
 echo "🎨 Downloading Oh My Posh themes from repository..."
+
 TEMP_DIR=$(mktemp -d)
-REPO_URL=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && git config --get remote.origin.url)
-git clone --depth 1 "$REPO_URL" "$TEMP_DIR"
-cp -r "$TEMP_DIR/.poshthemes" "$USER_HOME/.poshthemes"
+
+git clone --depth 1 https://github.com/mowaisnizami/fresh-environment-setup "$TEMP_DIR"
+
+# Copy only .poshthemes folder
+if [ -d "$TEMP_DIR/.poshthemes" ]; then
+  mkdir -p "$HOME/.poshthemes"
+  cp -r "$TEMP_DIR/.poshthemes/"* "$HOME/.poshthemes/"
+else
+  echo "⚠️  .poshthemes folder not found in repo"
+fi
+
 rm -rf "$TEMP_DIR"
 
 # -----------------------------
