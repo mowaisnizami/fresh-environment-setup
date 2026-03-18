@@ -194,3 +194,12 @@ EOF
 # -----------------------------
 echo "✅ Installation complete!"
 echo "👉 Restart terminal or run: exec zsh"
+
+
+if [ "$SHELL" != "$(which zsh)" ]; then
+  echo "⚠️  Could not auto-change shell."
+  echo "👉 Run this manually:"
+  echo "   chsh -s $(which zsh)"
+else
+  echo "✅ Zsh is already the default shell"
+fi
