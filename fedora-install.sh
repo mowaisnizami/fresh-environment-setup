@@ -211,6 +211,29 @@ sudo dnf install -y code
 echo "✅ VS Code installed!"
 
 # -----------------------------
+# Install pgAdmin 4
+# -----------------------------
+echo "🐘 Installing pgAdmin..."
+
+# Import repo key
+sudo rpm --import https://www.pgadmin.org/static/packages_pgadmin_org.pub
+
+# Add pgAdmin repo
+sudo sh -c 'cat > /etc/yum.repos.d/pgadmin4.repo <<EOF
+[pgadmin4]
+name=pgAdmin4
+baseurl=https://ftp.postgresql.org/pub/pgadmin/pgadmin4/yum/fedora/pgadmin4-fedora-repo
+enabled=1
+gpgcheck=1
+gpgkey=https://www.pgadmin.org/static/packages_pgadmin_org.pub
+EOF'
+
+# Install desktop version
+sudo dnf install -y pgadmin4-desktop
+
+echo "✅ pgAdmin installed!"
+
+# -----------------------------
 # Done
 # -----------------------------
 echo "✅ Installation complete!"
