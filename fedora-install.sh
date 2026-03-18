@@ -221,6 +221,19 @@ sudo yum install -y pgadmin4-desktop
 
 echo "✅ pgAdmin installed!"
 
+
+# -----------------------------
+# Install DBeaver
+# -----------------------------
+echo "🐘 Installing DBeaver..."
+sudo dnf install java-11-openjdk-devel
+wget https://dbeaver.io/files/dbeaver-ce-latest-linux-x86_64.rpm
+
+sudo dnf install -y dbeaver-ce-latest-linux-x86_64.rpm
+rm dbeaver-ce-latest-linux-x86_64.rpm
+
+echo "✅ DBeaver installed!"
+
 # -----------------------------
 # Done
 # -----------------------------
