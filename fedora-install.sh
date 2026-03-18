@@ -21,7 +21,7 @@ echo "🔧 Installing base packages..."
 sudo dnf install -y zsh git curl wget unzip gnome-tweaks gnome-extensions-app
 
 # Dev tools
-sudo dnf groupinstall -y "Development Tools"
+sudo dnf group install -y development-tools
 
 # -----------------------------
 # Set Zsh as default shell
