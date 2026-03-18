@@ -18,7 +18,7 @@ sudo dnf upgrade -y
 # Install base packages
 # -----------------------------
 echo "🔧 Installing base packages..."
-sudo dnf install -y zsh git curl wget unzip gnome-tweaks
+sudo dnf install -y zsh git curl wget unzip gnome-tweaks gnome-extensions-app
 
 # Dev tools
 sudo dnf groupinstall -y "Development Tools"
