@@ -27,7 +27,13 @@ sudo dnf group install -y development-tools
 # Set Zsh as default shell
 # -----------------------------
 echo "🐚 Setting Zsh as default shell..."
-chsh -s $(which zsh) || echo "⚠️  Note: To set Zsh as default shell, run: chsh -s $(which zsh)"
+if [ "$SHELL" != "$(which zsh)" ]; then
+  echo "⚠️  Could not auto-change shell."
+  echo "👉 Run this manually:"
+  echo "   chsh -s $(which zsh)"
+else
+  echo "✅ Zsh is already the default shell"
+fi
 
 # -----------------------------
 # Install Oh My Zsh
