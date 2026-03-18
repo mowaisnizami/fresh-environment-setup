@@ -242,8 +242,8 @@ echo "🐘 Installing DBeaver..."
 
 # Check if DBeaver is already installed
 if ! command -v dbeaver &>/dev/null && ! rpm -q dbeaver-ce &>/dev/null; then
-  echo "📥 Installing Java runtime..."
-  sudo dnf install -y java-11-openjdk-devel || true
+  # echo "📥 Installing Java runtime..."
+  # sudo dnf install -y java-11-openjdk-devel || true
   
   DBEAVER_FILE="dbeaver-ce-latest-linux-x86_64.rpm"
   echo "📥 Downloading DBeaver..."
