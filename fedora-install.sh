@@ -53,7 +53,7 @@ if [ ! -d "$NVS_HOME" ]; then
   git clone https://github.com/jasongin/nvs "$NVS_HOME"
 fi
 
-source "$NVS_HOME/nvs.sh"
+. "$NVS_HOME/nvs.sh" install
 nvs install lts
 nvs use lts
 
