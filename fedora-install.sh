@@ -47,14 +47,18 @@ fi
 # Install NVS (Node Version Switcher)
 # -----------------------------
 echo "🟢 Installing NVS..."
-export NVS_HOME="$USER_HOME/.nvs"
+
+export NVS_HOME="$HOME/.nvs"
 
 if [ ! -d "$NVS_HOME" ]; then
   git clone https://github.com/jasongin/nvs "$NVS_HOME"
 fi
 
-. "$NVS_HOME/nvs.sh" install
-nvs install lts
+# Load NVS
+[ -s "$NVS_HOME/nvs.sh" ] && . "$NVS_HOME/nvs.sh"
+
+# Install and use Node LTS
+nvs add lts
 nvs use lts
 
 # -----------------------------
