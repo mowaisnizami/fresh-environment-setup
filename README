@@ -1,0 +1,3 @@
+Install via the following command:
+
+curl -L https://github.com/mowaisnizami/fresh-environment-setup/raw/main/fedora-install.sh | sh
