@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "🚀 Starting environment setup..."
+
+USER_HOME="$HOME"
+ZSHRC="$USER_HOME/.zshrc"
+
+# -----------------------------
+# System Update
+# -----------------------------
+echo "📦 Updating system..."
+sudo dnf update -y
+sudo dnf upgrade -y
+
+# -----------------------------
+# Install base packages
+# -----------------------------
+echo "🔧 Installing base packages..."
+sudo dnf install -y zsh git curl wget unzip gnome-tweaks
+
+# Dev tools
+sudo dnf groupinstall -y "Development Tools"
+
+# -----------------------------
+# Set Zsh as default shell
+# -----------------------------
+echo "🐚 Setting Zsh as default shell..."
+chsh -s $(which zsh)
+
+# -----------------------------
+# Install Oh My Zsh
+# -----------------------------
+echo "✨ Installing Oh My Zsh..."
+if [ ! -d "$USER_HOME/.oh-my-zsh" ]; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+# -----------------------------
+# Install NVS (Node Version Switcher)
+# -----------------------------
+echo "🟢 Installing NVS..."
+export NVS_HOME="$USER_HOME/.nvs"
+
+if [ ! -d "$NVS_HOME" ]; then
+  git clone https://github.com/jasongin/nvs "$NVS_HOME"
+fi
+
+source "$NVS_HOME/nvs.sh"
+nvs install lts
+nvs use lts
+
+# -----------------------------
+# Install Homebrew (Linux)
+# -----------------------------
+echo "🍺 Installing Homebrew..."
+if [ ! -d "/home/linuxbrew/.linuxbrew" ]; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# -----------------------------
+# Install packages via brew
+# -----------------------------
+echo "📦 Installing brew packages..."
+brew install gcc
+brew install jandedobbeleer/oh-my-posh/oh-my-posh
+
+# -----------------------------
+# Install Oh My Posh font
+# -----------------------------
+echo "🔤 Installing fonts..."
+oh-my-posh font install meslo || true
+
+# -----------------------------
+# Download Oh My Posh themes from GitHub repository
+# -----------------------------
+echo "🎨 Downloading Oh My Posh themes from repository..."
+TEMP_DIR=$(mktemp -d)
+REPO_URL=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && git config --get remote.origin.url)
+git clone --depth 1 "$REPO_URL" "$TEMP_DIR"
+cp -r "$TEMP_DIR/.poshthemes" "$USER_HOME/.poshthemes"
+rm -rf "$TEMP_DIR"
+
+# -----------------------------
+# Install Zsh plugins
+# -----------------------------
+echo "🔌 Installing Zsh plugins..."
+
+ZSH_CUSTOM=${ZSH_CUSTOM:-$USER_HOME/.oh-my-zsh/custom}
+
+git clone https://github.com/zsh-users/zsh-autosuggestions \
+  $ZSH_CUSTOM/plugins/zsh-autosuggestions || true
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting \
+  $ZSH_CUSTOM/plugins/zsh-syntax-highlighting || true
+
+git clone https://github.com/zsh-users/zsh-history-substring-search \
+  $ZSH_CUSTOM/plugins/zsh-history-substring-search || true
+
+# -----------------------------
+# Install additional tools
+# -----------------------------
+echo "📱 Installing extra tools..."
+sudo dnf install -y uxplay
+
+npm install -g @nestjs/cli
+npm install -g @angular/cli
+npm install -g @ionic/cli
+
+# -----------------------------
+# Generate .zshrc (CLEAN WRITE)
+# -----------------------------
+echo "📝 Generating .zshrc..."
+
+cat > "$ZSHRC" << 'EOF'
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="robbyrussell"
+
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  zsh-history-substring-search
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# -----------------------------
+# NVS (Node)
+# -----------------------------
+export NVS_HOME="$HOME/.nvs"
+[ -s "$NVS_HOME/nvs.sh" ] && . "$NVS_HOME/nvs.sh"
+eval "nvs use lts"
+
+# -----------------------------
+# Homebrew
+# -----------------------------
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# -----------------------------
+# Oh My Posh
+# -----------------------------
+eval "$(oh-my-posh init zsh --config $HOME/.poshthemes/quick-term.omp.json)"
+
+# -----------------------------
+# Typewriter Effect
+# -----------------------------
+function typewrite() {
+  for arg in "$@"; do
+    for ((i = 0; i < ${#arg}; i++)); do
+      echo -n "${arg:$i:1}"
+      sleep 0.01
+    done
+  done
+  echo ""
+}
+
+function zsh_greeting() {
+  typewrite ""
+  typewrite " Hello, $(whoami)!"
+  typewrite " Welcome back! Today is $(date '+%A, %B %d, %Y')."
+  typewrite " Remember, every day is a new opportunity to shine! 🚀"
+  typewrite ""
+}
+
+zsh_greeting
+EOF
+
+# -----------------------------
+# Done
+# -----------------------------
+echo "✅ Installation complete!"
+echo "👉 Restart terminal or run: exec zsh"
