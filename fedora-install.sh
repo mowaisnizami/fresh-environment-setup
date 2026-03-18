@@ -190,13 +190,32 @@ zsh_greeting
 EOF
 
 # -----------------------------
+# Install VS Code
+# -----------------------------
+echo "🧠 Installing VS Code..."
+
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+
+sudo sh -c 'cat > /etc/yum.repos.d/vscode.repo <<EOF
+[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+EOF'
+
+sudo dnf check-update || true
+sudo dnf install -y code
+
+echo "✅ VS Code installed!"
+
+# -----------------------------
 # Done
 # -----------------------------
 echo "✅ Installation complete!"
 echo "👉 Restart terminal or run: exec zsh"
-
-
-  echo "⚠️  Could not auto-change shell."
-  echo "👉 Run this manually:"
-  echo "   chsh -s $(which zsh)"
+echo "⚠️  Could not auto-change shell."
+echo "👉 Run this manually:"
+echo "   chsh -s $(which zsh)"
 
